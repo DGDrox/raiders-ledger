@@ -1,24 +1,40 @@
-import type { Item, MaterialPrices, Goal } from "./engine/types";
+import type { Goal } from "./engine/types";
 
 const STORAGE_KEY = "raider_ledger_v1";
 
 export interface StashEntry {
-  id: string;
+  name: string;
   qty: number;
 }
 
 export interface PersistedState {
-  items: Item[];
-  materials: MaterialPrices;
   stash: StashEntry[];
   goals: Goal[];
+}
+
+function isValidStashEntry(e: unknown): e is StashEntry {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    typeof (e as StashEntry).name === "string" &&
+    typeof (e as StashEntry).qty === "number"
+  );
 }
 
 export function loadState(): PersistedState | null {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as PersistedState;
+    const parsed = JSON.parse(raw) as { stash?: unknown; goals?: unknown };
+    const stash =
+      Array.isArray(parsed.stash) && parsed.stash.every(isValidStashEntry)
+        ? (parsed.stash as StashEntry[])
+        : [];
+    const goals =
+      Array.isArray(parsed.goals) && parsed.goals.every((g) => typeof g === "string")
+        ? (parsed.goals as Goal[])
+        : [];
+    return { stash, goals };
   } catch {
     return null;
   }
@@ -28,7 +44,6 @@ export function saveState(state: PersistedState): void {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   } catch {
-    // localStorage full or unavailable (private mode on some browsers) —
-    // session still works in-memory, so swallow.
+    // localStorage full or unavailable — session works in-memory.
   }
 }

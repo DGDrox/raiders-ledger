@@ -1,17 +1,39 @@
+export type Rarity = "Common" | "Uncommon" | "Rare" | "Epic" | "Legendary";
+
+export type ItemCategory =
+  | "Weapon"
+  | "Shield"
+  | "Augment"
+  | "Ammunition"
+  | "Quick Use"
+  | "Mods"
+  | "Key"
+  | "Basic Material"
+  | "Topside Material"
+  | "Refined Material"
+  | "Recyclable"
+  | "Nature"
+  | "Trinket"
+  | "Misc";
+
 export interface RecycleYield {
-  m: string;
-  q: number;
+  name: string;
+  qty: number;
 }
 
 export interface Item {
-  id: string;
   name: string;
-  category: string;
-  sell: number;
+  category: ItemCategory;
+  rarity: Rarity;
+  sellPrice: number;
+  stackSize: number;
   recycle: RecycleYield[];
 }
 
-export type MaterialPrices = Record<string, number>;
+export interface Weapon {
+  name: string;
+  type: string;
+}
 
 export type Goal = string;
 
