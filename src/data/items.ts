@@ -1,13 +1,18 @@
 // Arc Raiders — Item Database
 // Source: arcraiders.wiki (scraped June 2026 via Cowork)
 //
-// Coverage:
-//   Total items   : 382
-//   Recycle filled: 153  (categories: Recyclable, Topside Material, Refined Material)
-//   Basic Material items have empty recycle[] (cannot be recycled per wiki).
-//   Key, Ammunition, Quick Use, Nature, Shield, Augment, Mods, Trinket, Misc
-//   also have empty recycle[] — these cannot be scrapped in-game.
-//   Weapons live in their own list (WEAPONS); v3 Loadout Evaluator will use them.
+// Coverage stats:
+//   ITEMS (loot/materials)  : 382  (153 with recycle yields)
+//   WEAPON_ITEMS (per tier) :  81  (all with recycle yields; Canto II–IV omitted — wiki incomplete)
+//   BLUEPRINTS              :  83  (all recycle: []; sell: 5,000 each)
+//   ─────────────────────────────────────────────────────
+//   Grand total entries     : 546
+//
+// recycle[] is empty in ITEMS for: Key, Ammunition, Quick Use, Nature, Weapon,
+//   Shield, Augment, Mods, Trinket, Misc — these cannot be scrapped in-game.
+// recycle[] is also empty for Basic Material items (Cannot be recycled per wiki).
+// WEAPON_ITEMS all have recycle populated from the wiki's Recycling & Salvaging table.
+// BLUEPRINTS cannot be scrapped → recycle: [].
 
 import type { Item, Weapon } from "../engine/types";
 
@@ -425,9 +430,189 @@ export const ITEMS: Item[] = [
   { name: "Zipline", category: "Quick Use", rarity: "Rare", sellPrice: 1000, stackSize: 3, recycle: [] },
 ];
 
+// ── WEAPON ITEMS ─────────────────────────────────────────────────────────────
+// Per-upgrade-tier. Legendary weapons cannot be upgraded so they get a single entry.
+// Canto II–IV omitted: per-tier sell prices not yet documented on wiki (June 2026).
+export const WEAPON_ITEMS: Item[] = [
+  { name: "Kettle I", category: "Weapon", rarity: "Common", sellPrice: 840, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 3 }, { name: "Rubber Parts", qty: 2 }] },
+  { name: "Kettle II", category: "Weapon", rarity: "Common", sellPrice: 2000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 6 }, { name: "Rubber Parts", qty: 6 }] },
+  { name: "Kettle III", category: "Weapon", rarity: "Common", sellPrice: 3000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 12 }, { name: "Simple Gun Parts", qty: 1 }] },
+  { name: "Kettle IV", category: "Weapon", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 2 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Rattler I", category: "Weapon", rarity: "Common", sellPrice: 1750, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 8 }] },
+  { name: "Rattler II", category: "Weapon", rarity: "Common", sellPrice: 3000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 12 }] },
+  { name: "Rattler III", category: "Weapon", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 3 }, { name: "Simple Gun Parts", qty: 1 }] },
+  { name: "Rattler IV", category: "Weapon", rarity: "Common", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 4 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Ferro I", category: "Weapon", rarity: "Common", sellPrice: 475, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 2 }, { name: "Rubber Parts", qty: 1 }] },
+  { name: "Ferro II", category: "Weapon", rarity: "Common", sellPrice: 1000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 4 }, { name: "Rubber Parts", qty: 3 }] },
+  { name: "Ferro III", category: "Weapon", rarity: "Common", sellPrice: 2000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 6 }, { name: "Simple Gun Parts", qty: 1 }] },
+  { name: "Ferro IV", category: "Weapon", rarity: "Common", sellPrice: 2900, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 1 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Stitcher I", category: "Weapon", rarity: "Common", sellPrice: 800, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 3 }, { name: "Rubber Parts", qty: 2 }] },
+  { name: "Stitcher II", category: "Weapon", rarity: "Common", sellPrice: 2000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 6 }, { name: "Rubber Parts", qty: 6 }] },
+  { name: "Stitcher III", category: "Weapon", rarity: "Common", sellPrice: 3000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 12 }, { name: "Simple Gun Parts", qty: 1 }] },
+  { name: "Stitcher IV", category: "Weapon", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 2 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Hairpin I", category: "Weapon", rarity: "Common", sellPrice: 450, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 2 }, { name: "Rubber Parts", qty: 1 }] },
+  { name: "Hairpin II", category: "Weapon", rarity: "Common", sellPrice: 1000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 4 }, { name: "Rubber Parts", qty: 3 }] },
+  { name: "Hairpin III", category: "Weapon", rarity: "Common", sellPrice: 2000, stackSize: 1, recycle: [{ name: "Metal Parts", qty: 6 }, { name: "Simple Gun Parts", qty: 1 }] },
+  { name: "Hairpin IV", category: "Weapon", rarity: "Common", sellPrice: 2900, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 1 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Arpeggio I", category: "Weapon", rarity: "Uncommon", sellPrice: 5500, stackSize: 1, recycle: [{ name: "Simple Gun Parts", qty: 2 }, { name: "Mechanical Components", qty: 2 }] },
+  { name: "Arpeggio II", category: "Weapon", rarity: "Uncommon", sellPrice: 8000, stackSize: 1, recycle: [{ name: "Simple Gun Parts", qty: 3 }, { name: "Mechanical Components", qty: 3 }] },
+  { name: "Arpeggio III", category: "Weapon", rarity: "Uncommon", sellPrice: 11500, stackSize: 1, recycle: [{ name: "Simple Gun Parts", qty: 4 }, { name: "Mechanical Components", qty: 4 }] },
+  { name: "Arpeggio IV", category: "Weapon", rarity: "Uncommon", sellPrice: 15000, stackSize: 1, recycle: [{ name: "Simple Gun Parts", qty: 5 }, { name: "Mechanical Components", qty: 5 }] },
+  { name: "Il Toro I", category: "Weapon", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 2 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Il Toro II", category: "Weapon", rarity: "Uncommon", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 3 }, { name: "Simple Gun Parts", qty: 3 }] },
+  { name: "Il Toro III", category: "Weapon", rarity: "Uncommon", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 4 }, { name: "Simple Gun Parts", qty: 4 }] },
+  { name: "Il Toro IV", category: "Weapon", rarity: "Uncommon", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 5 }, { name: "Simple Gun Parts", qty: 5 }] },
+  { name: "Burletta I", category: "Weapon", rarity: "Uncommon", sellPrice: 2900, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 1 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Burletta II", category: "Weapon", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 2 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Burletta III", category: "Weapon", rarity: "Uncommon", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 3 }, { name: "Simple Gun Parts", qty: 3 }] },
+  { name: "Burletta IV", category: "Weapon", rarity: "Uncommon", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 4 }, { name: "Simple Gun Parts", qty: 4 }] },
+  { name: "Anvil I", category: "Weapon", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 2 }, { name: "Simple Gun Parts", qty: 2 }] },
+  { name: "Anvil II", category: "Weapon", rarity: "Uncommon", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 3 }, { name: "Simple Gun Parts", qty: 3 }] },
+  { name: "Anvil III", category: "Weapon", rarity: "Uncommon", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 4 }, { name: "Simple Gun Parts", qty: 4 }] },
+  { name: "Anvil IV", category: "Weapon", rarity: "Uncommon", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Mechanical Components", qty: 5 }, { name: "Simple Gun Parts", qty: 5 }] },
+  { name: "Renegade I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Renegade II", category: "Weapon", rarity: "Rare", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Renegade III", category: "Weapon", rarity: "Rare", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Renegade IV", category: "Weapon", rarity: "Rare", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Canto I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Venator I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Venator II", category: "Weapon", rarity: "Rare", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Venator III", category: "Weapon", rarity: "Rare", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Venator IV", category: "Weapon", rarity: "Rare", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Torrente I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Torrente II", category: "Weapon", rarity: "Rare", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Torrente III", category: "Weapon", rarity: "Rare", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Torrente IV", category: "Weapon", rarity: "Rare", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Osprey I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Osprey II", category: "Weapon", rarity: "Rare", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Osprey III", category: "Weapon", rarity: "Rare", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Osprey IV", category: "Weapon", rarity: "Rare", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Rascal I", category: "Weapon", rarity: "Rare", sellPrice: 7000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Rascal II", category: "Weapon", rarity: "Rare", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Rascal III", category: "Weapon", rarity: "Rare", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Rascal IV", category: "Weapon", rarity: "Rare", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Tempest I", category: "Weapon", rarity: "Epic", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Medium Gun Parts", qty: 2 }] },
+  { name: "Tempest II", category: "Weapon", rarity: "Epic", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Medium Gun Parts", qty: 3 }] },
+  { name: "Tempest III", category: "Weapon", rarity: "Epic", sellPrice: 22000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 4 }, { name: "Medium Gun Parts", qty: 4 }] },
+  { name: "Tempest IV", category: "Weapon", rarity: "Epic", sellPrice: 27000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 5 }, { name: "Medium Gun Parts", qty: 4 }] },
+  { name: "Bettina I", category: "Weapon", rarity: "Epic", sellPrice: 8000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 1 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Bettina II", category: "Weapon", rarity: "Epic", sellPrice: 11000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Bettina III", category: "Weapon", rarity: "Epic", sellPrice: 14000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Bettina IV", category: "Weapon", rarity: "Epic", sellPrice: 18000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Bobcat I", category: "Weapon", rarity: "Epic", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Light Gun Parts", qty: 2 }] },
+  { name: "Bobcat II", category: "Weapon", rarity: "Epic", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Light Gun Parts", qty: 3 }] },
+  { name: "Bobcat III", category: "Weapon", rarity: "Epic", sellPrice: 22000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 4 }, { name: "Light Gun Parts", qty: 4 }] },
+  { name: "Bobcat IV", category: "Weapon", rarity: "Epic", sellPrice: 27000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 5 }, { name: "Light Gun Parts", qty: 4 }] },
+  { name: "Vulcano I", category: "Weapon", rarity: "Epic", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Vulcano II", category: "Weapon", rarity: "Epic", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Vulcano III", category: "Weapon", rarity: "Epic", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Heavy Gun Parts", qty: 4 }] },
+  { name: "Vulcano IV", category: "Weapon", rarity: "Epic", sellPrice: 22000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 4 }, { name: "Heavy Gun Parts", qty: 5 }] },
+  { name: "Hullcracker I", category: "Weapon", rarity: "Epic", sellPrice: 10000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 2 }] },
+  { name: "Hullcracker II", category: "Weapon", rarity: "Epic", sellPrice: 13000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 2 }, { name: "Heavy Gun Parts", qty: 3 }] },
+  { name: "Hullcracker III", category: "Weapon", rarity: "Epic", sellPrice: 17000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 3 }, { name: "Heavy Gun Parts", qty: 4 }] },
+  { name: "Hullcracker IV", category: "Weapon", rarity: "Epic", sellPrice: 22000, stackSize: 1, recycle: [{ name: "Advanced Mechanical Components", qty: 4 }, { name: "Heavy Gun Parts", qty: 5 }] },
+  { name: "Aphelion", category: "Weapon", rarity: "Legendary", sellPrice: 27500, stackSize: 1, recycle: [{ name: "Magnetic Accelerator", qty: 2 }, { name: "Complex Gun Parts", qty: 1 }] },
+  { name: "Dolabra", category: "Weapon", rarity: "Legendary", sellPrice: 27500, stackSize: 1, recycle: [{ name: "Magnetic Accelerator", qty: 2 }] },
+  { name: "Jupiter", category: "Weapon", rarity: "Legendary", sellPrice: 27500, stackSize: 1, recycle: [{ name: "Magnetic Accelerator", qty: 2 }, { name: "Complex Gun Parts", qty: 1 }] },
+  { name: "Equalizer", category: "Weapon", rarity: "Legendary", sellPrice: 27500, stackSize: 1, recycle: [{ name: "Magnetic Accelerator", qty: 2 }, { name: "Complex Gun Parts", qty: 1 }] },
+];
+
+// ── BLUEPRINTS ───────────────────────────────────────────────────────────────
+// 83 blueprints. All sell for 5,000c per wiki. Cannot be scrapped.
+export const BLUEPRINTS: Item[] = [
+  { name: "Anvil Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Aphelion Blueprint", category: "Blueprint", rarity: "Legendary", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Bettina Blueprint", category: "Blueprint", rarity: "Epic", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Bobcat Blueprint", category: "Blueprint", rarity: "Epic", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Burletta Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Canto Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Dolabra Blueprint", category: "Blueprint", rarity: "Legendary", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Equalizer Blueprint", category: "Blueprint", rarity: "Legendary", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Hullcracker Blueprint", category: "Blueprint", rarity: "Epic", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Il Toro Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Jupiter Blueprint", category: "Blueprint", rarity: "Legendary", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Osprey Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Rascal Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Renegade Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tempest Blueprint", category: "Blueprint", rarity: "Epic", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Torrente Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Venator Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Vulcano Blueprint", category: "Blueprint", rarity: "Epic", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Combat Mk. 3 (Aggressive) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Combat Mk. 3 (Flanking) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Looting Mk. 3 (Safekeeper) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Looting Mk. 3 (Survivor) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tactical Mk. 3 (Defensive) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tactical Mk. 3 (Healing) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tactical Mk. 3 (Revival) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tactical Mk. 3 (Smoke) Blueprint", category: "Blueprint", rarity: "Rare", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Angled Grip II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Angled Grip III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Compensator II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Compensator III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Barrel II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Barrel III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Light Magazine II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Light Magazine III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Medium Magazine II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Medium Magazine III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Shotgun Magazine II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Extended Shotgun Magazine III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Lightweight Stock Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Muzzle Brake II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Muzzle Brake III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Padded Stock Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Shotgun Choke II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Shotgun Choke III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Shotgun Silencer Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Silencer I Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Silencer II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Stable Stock II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Stable Stock III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Vertical Grip II Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Vertical Grip III Blueprint", category: "Blueprint", rarity: "Uncommon", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Complex Gun Parts Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Heavy Gun Parts Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Light Gun Parts Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Medium Gun Parts Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Barricade Kit Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Blaze Grenade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Blue Light Stick Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Crash Mat Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Deadline Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Defibrillator Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Explosive Mine Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Fireworks Box Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Gas Mine Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Green Light Stick Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Jolt Mine Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Lure Grenade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Powered Descender Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Pulse Mine Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Red Light Stick Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Remote Raider Flare Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Seeker Grenade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Showstopper Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Smoke Grenade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Snap Hook Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Surge Coil Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Tagging Grenade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Trailblazer Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Trigger 'Nade Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Vita Shot Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Vita Spray Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "White Flag Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Wolfpack Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+  { name: "Yellow Light Stick Blueprint", category: "Blueprint", rarity: "Common", sellPrice: 5000, stackSize: 1, recycle: [] },
+];
+
 // ── CONVENIENCE EXPORTS ─────────────────────────────────────────────────────
-export const ITEM_NAMES: string[] = ITEMS.map((i) => i.name);
+// ALL_ITEMS combines loot + weapons + blueprints. ITEM_BY_NAME indexes the
+// combined list so stash rows and engine lookups resolve for every category.
+export const ALL_ITEMS: Item[] = [...ITEMS, ...WEAPON_ITEMS, ...BLUEPRINTS];
+
+export const ITEM_NAMES: string[] = ALL_ITEMS.map((i) => i.name);
 
 export const ITEM_BY_NAME: Record<string, Item> = Object.fromEntries(
-  ITEMS.map((i) => [i.name, i]),
+  ALL_ITEMS.map((i) => [i.name, i]),
 );

@@ -14,7 +14,8 @@ export type ItemCategory =
   | "Recyclable"
   | "Nature"
   | "Trinket"
-  | "Misc";
+  | "Misc"
+  | "Blueprint";
 
 export interface RecycleYield {
   name: string;

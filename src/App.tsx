@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, type CSSProperties, type ReactNode } from "react";
 import type { Item, Goal, Action, Rarity, ItemCategory } from "./engine/types";
 import { recommend } from "./engine/recommend";
-import { ITEMS, ITEM_BY_NAME } from "./data/items";
+import { ALL_ITEMS, ITEM_BY_NAME } from "./data/items";
 import { loadState, saveState, type StashEntry } from "./storage";
 
 const COLORS = {
@@ -38,6 +38,8 @@ const MATERIAL_CATEGORIES: ItemCategory[] = [
 ];
 
 const HOARDABLE_CATEGORIES: ItemCategory[] = [
+  "Weapon",
+  "Blueprint",
   "Recyclable",
   "Trinket",
   "Quick Use",
@@ -51,6 +53,8 @@ const HOARDABLE_CATEGORIES: ItemCategory[] = [
 // Order categories appear in the stash Add picker. Materials first since
 // they're the most-farmed loot. Misc last.
 const PICKER_CATEGORY_ORDER: ItemCategory[] = [
+  "Weapon",
+  "Blueprint",
   "Basic Material",
   "Topside Material",
   "Refined Material",
@@ -115,8 +119,8 @@ export default function App() {
   const pickerGroups = useMemo(() => {
     const q = pickerSearch.trim().toLowerCase();
     const matches = q
-      ? ITEMS.filter((i) => i.name.toLowerCase().includes(q))
-      : ITEMS;
+      ? ALL_ITEMS.filter((i) => i.name.toLowerCase().includes(q))
+      : ALL_ITEMS;
     return PICKER_CATEGORY_ORDER.map((cat) => ({
       category: cat,
       items: matches.filter((i) => i.category === cat),
@@ -433,12 +437,12 @@ function GoalsTab({
   const q = goalSearch.trim().toLowerCase();
 
   const materials = useMemo(() => {
-    const list = ITEMS.filter((i) => MATERIAL_CATEGORIES.includes(i.category));
+    const list = ALL_ITEMS.filter((i) => MATERIAL_CATEGORIES.includes(i.category));
     return q ? list.filter((i) => i.name.toLowerCase().includes(q)) : list;
   }, [q]);
 
   const hoardables = useMemo(() => {
-    const list = ITEMS.filter((i) => HOARDABLE_CATEGORIES.includes(i.category));
+    const list = ALL_ITEMS.filter((i) => HOARDABLE_CATEGORIES.includes(i.category));
     return q ? list.filter((i) => i.name.toLowerCase().includes(q)) : list.slice(0, 40);
   }, [q]);
 
