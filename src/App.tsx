@@ -50,27 +50,9 @@ const HOARDABLE_CATEGORIES: ItemCategory[] = [
   "Misc",
 ];
 
-// Order categories appear in the stash Add picker. Materials first since
-// they're the most-farmed loot. Misc last.
-const PICKER_CATEGORY_ORDER: ItemCategory[] = [
-  "Weapon",
-  "Blueprint",
-  "Basic Material",
-  "Topside Material",
-  "Refined Material",
-  "Recyclable",
-  "Quick Use",
-  "Mods",
-  "Augment",
-  "Nature",
-  "Trinket",
-  "Shield",
-  "Ammunition",
-  "Key",
-  "Misc",
-];
-
 type TabId = "stash" | "goals";
+
+const PICKER_MAX_RESULTS = 50;
 
 const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');`;
 
@@ -81,7 +63,6 @@ export default function App() {
   const [ready, setReady] = useState(false);
   const [pickerSearch, setPickerSearch] = useState("");
   const [goalSearch, setGoalSearch] = useState("");
-  const [expandedCats, setExpandedCats] = useState<Set<ItemCategory>>(new Set());
 
   useEffect(() => {
     const s = loadState();
@@ -116,26 +97,11 @@ export default function App() {
     return { optimized, sellAll, gain: optimized - sellAll };
   }, [stashRows]);
 
-  const pickerGroups = useMemo(() => {
+  const pickerResults = useMemo(() => {
     const q = pickerSearch.trim().toLowerCase();
-    const matches = q
-      ? ALL_ITEMS.filter((i) => i.name.toLowerCase().includes(q))
-      : ALL_ITEMS;
-    return PICKER_CATEGORY_ORDER.map((cat) => ({
-      category: cat,
-      items: matches.filter((i) => i.category === cat),
-    })).filter((g) => g.items.length > 0);
+    if (!q) return [];
+    return ALL_ITEMS.filter((i) => i.name.toLowerCase().includes(q));
   }, [pickerSearch]);
-
-  const searchActive = pickerSearch.trim().length > 0;
-  function toggleCategory(cat: ItemCategory) {
-    setExpandedCats((prev) => {
-      const next = new Set(prev);
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next;
-    });
-  }
 
   function addToStash(name: string) {
     setStash((prev) => {
@@ -199,10 +165,7 @@ export default function App() {
           <StashTab
             pickerSearch={pickerSearch}
             setPickerSearch={setPickerSearch}
-            pickerGroups={pickerGroups}
-            searchActive={searchActive}
-            expandedCats={expandedCats}
-            toggleCategory={toggleCategory}
+            pickerResults={pickerResults}
             stashRows={stashRows}
             totals={totals}
             addToStash={addToStash}
@@ -269,10 +232,7 @@ type StashRow = {
 function StashTab({
   pickerSearch,
   setPickerSearch,
-  pickerGroups,
-  searchActive,
-  expandedCats,
-  toggleCategory,
+  pickerResults,
   stashRows,
   totals,
   addToStash,
@@ -281,67 +241,61 @@ function StashTab({
 }: {
   pickerSearch: string;
   setPickerSearch: (s: string) => void;
-  pickerGroups: { category: ItemCategory; items: Item[] }[];
-  searchActive: boolean;
-  expandedCats: Set<ItemCategory>;
-  toggleCategory: (cat: ItemCategory) => void;
+  pickerResults: Item[];
   stashRows: StashRow[];
   totals: { optimized: number; sellAll: number; gain: number };
   addToStash: (name: string) => void;
   removeStash: (name: string) => void;
   bump: (name: string, d: number) => void;
 }) {
+  const hasQuery = pickerSearch.trim().length > 0;
+  const visible = pickerResults.slice(0, PICKER_MAX_RESULTS);
+  const overflow = pickerResults.length - visible.length;
+
   return (
     <>
       <SectionLabel>Add to stash</SectionLabel>
       <input
         type="text"
-        placeholder="Search items…"
+        placeholder="Search items, weapons, blueprints…"
         value={pickerSearch}
         onChange={(e) => setPickerSearch(e.target.value)}
         style={inputStyle}
       />
-      <div
-        style={{
-          marginTop: 8,
-          marginBottom: 16,
-          border: `1px solid ${COLORS.line}`,
-          borderRadius: 3,
-          background: COLORS.panel,
-          overflow: "hidden",
-        }}
-      >
-        {pickerGroups.length === 0 && (
-          <div style={{ padding: "12px 14px", fontSize: 12, color: COLORS.textDim, textAlign: "center" }}>
-            No matches
-          </div>
-        )}
-        {pickerGroups.map((g) => {
-          const expanded = searchActive || expandedCats.has(g.category);
-          return (
-            <div key={g.category}>
-              <button
-                onClick={() => toggleCategory(g.category)}
-                style={categoryHeaderStyle}
-                disabled={searchActive}
-                aria-expanded={expanded}
-              >
-                <span style={{ flex: 1, textAlign: "left" }}>{g.category}</span>
-                <span style={{ fontSize: 11, color: COLORS.textDim, marginRight: 8 }}>{g.items.length}</span>
-                <span style={{ color: COLORS.amber, fontSize: 11 }}>{expanded ? "▾" : "▸"}</span>
-              </button>
-              {expanded &&
-                g.items.map((i) => (
-                  <button key={i.name} onClick={() => addToStash(i.name)} style={pickerRowStyle}>
-                    <RarityDot rarity={i.rarity} />
-                    <span style={{ flex: 1, textAlign: "left", fontSize: 13 }}>{i.name}</span>
-                    <span style={{ fontSize: 11, color: COLORS.textDim }}>{i.sellPrice}c</span>
-                  </button>
-                ))}
+      {hasQuery && (
+        <div
+          style={{
+            marginTop: 8,
+            marginBottom: 16,
+            border: `1px solid ${COLORS.line}`,
+            borderRadius: 3,
+            background: COLORS.panel,
+            overflow: "hidden",
+          }}
+        >
+          {visible.length === 0 ? (
+            <div style={{ padding: "12px 14px", fontSize: 12, color: COLORS.textDim, textAlign: "center" }}>
+              No matches
             </div>
-          );
-        })}
-      </div>
+          ) : (
+            <>
+              {visible.map((i) => (
+                <button key={i.name} onClick={() => addToStash(i.name)} style={pickerRowStyle}>
+                  <RarityDot rarity={i.rarity} />
+                  <span style={{ flex: 1, textAlign: "left", fontSize: 13 }}>{i.name}</span>
+                  <span style={{ fontSize: 11, color: COLORS.textDim }}>{i.sellPrice}c</span>
+                </button>
+              ))}
+              {overflow > 0 && (
+                <div style={{ padding: "8px 14px", fontSize: 11, color: COLORS.textDim, textAlign: "center", borderTop: `1px solid ${COLORS.line}` }}>
+                  +{overflow} more — refine your search
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+      {!hasQuery && <div style={{ height: 16 }} />}
 
       <div style={{ display: "flex", gap: 10, marginBottom: 16, flexWrap: "wrap" }}>
         <Stat label="Optimized take" value={`${totals.optimized}c`} color={COLORS.amber} />
@@ -522,23 +476,6 @@ const inputStyle: CSSProperties = {
   fontSize: 13,
   borderRadius: 3,
   boxSizing: "border-box",
-};
-
-const categoryHeaderStyle: CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  width: "100%",
-  padding: "10px 14px",
-  background: "#26201a",
-  color: "#e7ddcf",
-  border: "none",
-  borderBottom: "1px solid #3a3027",
-  cursor: "pointer",
-  fontFamily: "Oswald, sans-serif",
-  textTransform: "uppercase",
-  letterSpacing: "0.08em",
-  fontSize: 12,
-  fontWeight: 600,
 };
 
 const pickerRowStyle: CSSProperties = {
