@@ -3,6 +3,7 @@ import type { Item, Goal, Action, Rarity, ItemCategory } from "./engine/types";
 import { recommend } from "./engine/recommend";
 import { ALL_ITEMS, ITEM_BY_NAME } from "./data/items";
 import { loadState, saveState, type StashEntry } from "./storage";
+import RunPlanner from "./components/RunPlanner";
 
 const COLORS = {
   bg: "#14110d",
@@ -50,7 +51,7 @@ const HOARDABLE_CATEGORIES: ItemCategory[] = [
   "Misc",
 ];
 
-type TabId = "stash" | "goals";
+type TabId = "stash" | "goals" | "planner";
 
 const PICKER_MAX_RESULTS = 50;
 
@@ -158,6 +159,7 @@ export default function App() {
       <div style={{ display: "flex", borderBottom: `1px solid ${COLORS.line}`, background: COLORS.panel }}>
         <TabButton id="stash" tab={tab} setTab={setTab} label="Stash" />
         <TabButton id="goals" tab={tab} setTab={setTab} label="Goals" />
+        <TabButton id="planner" tab={tab} setTab={setTab} label="Planner" />
       </div>
 
       <div style={{ padding: 20 }}>
@@ -182,6 +184,8 @@ export default function App() {
             toggleGoal={toggleGoal}
           />
         )}
+
+        {tab === "planner" && <RunPlanner stash={stash} />}
       </div>
     </div>
   );
