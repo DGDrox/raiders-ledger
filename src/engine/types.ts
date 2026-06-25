@@ -45,3 +45,12 @@ export interface Recommendation {
   reason: string;
   value: number;
 }
+
+export type RecipeCategory = "Hideout" | "Combat" | "Crafted Item";
+
+export interface Recipe {
+  name: string;
+  category: RecipeCategory;
+  // material name → quantity needed for 1 craft
+  needs: Record<string, number>;
+}
