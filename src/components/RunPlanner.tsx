@@ -11,8 +11,10 @@ import {
 import { ITEM_BY_NAME } from "../data/items";
 import { RECIPES } from "../data/recipes";
 import { MAPS } from "../data/maps";
-import { WEATHER } from "../data/weather";
 import type { StashEntry } from "../storage";
+
+// Practice Range is a training map — no loot, no relevance for planning.
+const SELECTABLE_MAPS = MAPS.filter((m) => m.name !== "Practice Range");
 
 const COLORS = {
   bg: "#14110d",
@@ -35,8 +37,6 @@ const RARITY_COLOR: Record<Rarity, string> = {
   Legendary: COLORS.amber,
 };
 
-const ANY_MAP = "__any__";
-const ANY_WEATHER = "__any__";
 const UPGRADE_PREFIX = "upgrade:";
 
 // Categories you actually loot off the ground in a raid. Recipe ingredients
@@ -92,8 +92,7 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
   const [selectedKey, setSelectedKey] = useState<string>(pickerEntries[0].key);
   const [transitionIndex, setTransitionIndex] = useState<number>(0);
   const [qty, setQty] = useState<number>(1);
-  const [mapName, setMapName] = useState<string>(ANY_MAP);
-  const [weatherName, setWeatherName] = useState<string>(ANY_WEATHER);
+  const [mapName, setMapName] = useState<string>(SELECTABLE_MAPS[0].name);
 
   const selectedEntry = useMemo(
     () => pickerEntries.find((e) => e.key === selectedKey) ?? pickerEntries[0],
@@ -130,8 +129,7 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
     return !!item && FARMABLE_CATEGORIES.includes(item.category);
   });
 
-  const selectedMap = mapName === ANY_MAP ? null : MAPS.find((m) => m.name === mapName) ?? null;
-  const selectedWeather = weatherName === ANY_WEATHER ? null : WEATHER.find((w) => w.name === weatherName) ?? null;
+  const selectedMap = SELECTABLE_MAPS.find((m) => m.name === mapName) ?? SELECTABLE_MAPS[0];
 
   return (
     <>
@@ -174,52 +172,20 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
       )}
       {selectedEntry.kind === "single" && <div style={{ marginBottom: 8 }} />}
 
-      <SectionLabel>Planning for (optional)</SectionLabel>
+      <SectionLabel>Map</SectionLabel>
       <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
         <select
           value={mapName}
           onChange={(e) => setMapName(e.target.value)}
-          style={{ ...selectStyle, flex: "1 1 140px" }}
+          style={{ ...selectStyle, flex: "1 1 200px" }}
         >
-          <option value={ANY_MAP}>Any map</option>
-          {MAPS.map((m) => (
+          {SELECTABLE_MAPS.map((m) => (
             <option key={m.name} value={m.name}>
               {m.name}
             </option>
           ))}
         </select>
-        <select
-          value={weatherName}
-          onChange={(e) => setWeatherName(e.target.value)}
-          style={{ ...selectStyle, flex: "1 1 140px" }}
-        >
-          <option value={ANY_WEATHER}>Any condition</option>
-          {WEATHER.map((w) => (
-            <option key={w.name} value={w.name}>
-              {w.name}
-            </option>
-          ))}
-        </select>
       </div>
-
-      {selectedWeather && (
-        <div
-          style={{
-            background: COLORS.panel,
-            border: `1px solid ${COLORS.line}`,
-            borderLeft: `3px solid ${COLORS.amber}`,
-            borderRadius: 3,
-            padding: "10px 12px",
-            marginBottom: 16,
-            fontSize: 12,
-            color: COLORS.textDim,
-            lineHeight: 1.5,
-          }}
-        >
-          <span style={{ color: COLORS.amber, fontWeight: 600 }}>{selectedWeather.name}: </span>
-          {selectedWeather.advisorHint}
-        </div>
-      )}
 
       <SectionLabel>Materials</SectionLabel>
       <div style={{ marginBottom: 18 }}>
@@ -250,7 +216,7 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
               key={p.material}
               material={p.material}
               short={p.short}
-              mapFilter={selectedMap?.name ?? null}
+              mapFilter={selectedMap.name}
             />
           ))}
         </>
