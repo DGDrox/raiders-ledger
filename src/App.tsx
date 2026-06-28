@@ -4,7 +4,7 @@ import { recommend } from "./engine/recommend";
 import { ALL_ITEMS, ITEM_BY_NAME } from "./data/items";
 import { loadState, saveState, type StashEntry } from "./storage";
 import RunPlanner from "./components/RunPlanner";
-import { COLORS, RARITY_COLOR, FONT_IMPORT, HEADER_FONT, BODY_FONT } from "./ui/theme";
+import { COLORS, RARITY_COLOR, FONT_IMPORT, HEADER_FONT, BODY_FONT, RAINBOW_GRADIENT } from "./ui/theme";
 
 const ACTION_COLOR: Record<Action, string> = {
   SELL: COLORS.amber,
@@ -112,27 +112,26 @@ export default function App() {
 
       <div
         style={{
-          padding: "18px 22px 14px",
-          borderBottom: `1px solid ${COLORS.line}`,
+          padding: "20px 22px 16px",
           background: `linear-gradient(180deg, ${COLORS.panel}, ${COLORS.bg})`,
         }}
       >
         <div
           style={{
             fontFamily: HEADER_FONT,
-            fontWeight: 700,
-            fontSize: 26,
-            letterSpacing: "0.04em",
+            fontSize: 32,
+            letterSpacing: "0.01em",
             color: COLORS.text,
-            lineHeight: 1,
+            lineHeight: 0.95,
           }}
         >
           RAIDER<span style={{ color: COLORS.amber }}>'</span>S LEDGER
         </div>
-        <div style={{ fontSize: 11, color: COLORS.textDim, marginTop: 5, letterSpacing: "0.05em" }}>
+        <div style={{ fontSize: 11, color: COLORS.textDim, marginTop: 6, letterSpacing: "0.05em" }}>
           PROFIT ADVISOR · sell / recycle / keep · v1
         </div>
       </div>
+      <div style={{ height: 4, background: RAINBOW_GRADIENT }} />
 
       <div style={{ display: "flex", borderBottom: `1px solid ${COLORS.line}`, background: COLORS.panel }}>
         <TabButton id="stash" tab={tab} setTab={setTab} label="Stash" />
