@@ -336,19 +336,10 @@ function FarmRecommendation({
             : "No map data available for this material yet."}
         </div>
       )}
-      {maps.map((m) => {
-        const isTop = primary.includes(m);
-        return (
+      {maps.map((m) => (
         <div key={m.name} style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${COLORS.line}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ flex: 1, fontSize: 13, color: COLORS.text, fontWeight: 500 }}>
-              {m.name}
-              {isTop && (
-                <span style={{ marginLeft: 6, fontSize: 9, color: COLORS.amber, fontWeight: 600, letterSpacing: "0.08em" }}>
-                  TOP DROP
-                </span>
-              )}
-            </div>
+            <div style={{ flex: 1, fontSize: 13, color: COLORS.text, fontWeight: 500 }}>{m.name}</div>
             <div style={{ fontSize: 10, color: COLORS.textDim, textTransform: "uppercase", letterSpacing: "0.08em" }}>
               {m.riskLevel} · {m.recommendedSize}
             </div>
@@ -360,8 +351,7 @@ function FarmRecommendation({
             </div>
           )}
         </div>
-        );
-      })}
+      ))}
     </div>
   );
 }
