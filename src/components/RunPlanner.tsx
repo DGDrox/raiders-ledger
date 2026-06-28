@@ -1,5 +1,5 @@
 import { useState, useMemo, type CSSProperties, type ReactNode } from "react";
-import type { Rarity, Recipe } from "../engine/types";
+import type { ItemCategory, Rarity, Recipe } from "../engine/types";
 import {
   materialsFromStash,
   requirementsForRecipe,
@@ -38,6 +38,18 @@ const RARITY_COLOR: Record<Rarity, string> = {
 const ANY_MAP = "__any__";
 const ANY_WEATHER = "__any__";
 const UPGRADE_PREFIX = "upgrade:";
+
+// Categories you actually loot off the ground in a raid. Recipe ingredients
+// outside this list (weapons, blueprints, augments, shields, mods, ammo, keys,
+// quick-use, misc) get no "where to farm" entry — you craft them, not raid for them.
+const FARMABLE_CATEGORIES: ItemCategory[] = [
+  "Basic Material",
+  "Topside Material",
+  "Refined Material",
+  "Recyclable",
+  "Nature",
+  "Trinket",
+];
 
 type PickerEntry =
   | { kind: "single"; key: string; label: string; recipe: Recipe }
@@ -112,7 +124,11 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
   const plan = useMemo(() => shortfall(required, available), [required, available]);
 
   const fullyCovered = plan.every((p) => p.short === 0);
-  const farmList = plan.filter((p) => p.short > 0);
+  const farmList = plan.filter((p) => {
+    if (p.short === 0) return false;
+    const item = ITEM_BY_NAME[p.material];
+    return !!item && FARMABLE_CATEGORIES.includes(item.category);
+  });
 
   const selectedMap = mapName === ANY_MAP ? null : MAPS.find((m) => m.name === mapName) ?? null;
   const selectedWeather = weatherName === ANY_WEATHER ? null : WEATHER.find((w) => w.name === weatherName) ?? null;
@@ -226,7 +242,7 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
         >
           Your stash covers this. Recycle the relevant items and craft — no raid needed.
         </div>
-      ) : (
+      ) : farmList.length > 0 ? (
         <>
           <SectionLabel>Where to farm</SectionLabel>
           {farmList.map((p) => (
@@ -238,7 +254,7 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
             />
           ))}
         </>
-      )}
+      ) : null}
     </>
   );
 }
