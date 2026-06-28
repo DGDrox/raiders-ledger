@@ -1,5 +1,5 @@
 import { useState, useMemo, type CSSProperties, type ReactNode } from "react";
-import type { Rarity } from "../engine/types";
+import type { Rarity, Recipe } from "../engine/types";
 import {
   materialsFromStash,
   requirementsForRecipe,
@@ -36,17 +36,67 @@ const RARITY_COLOR: Record<Rarity, string> = {
 
 const ANY_MAP = "__any__";
 const ANY_WEATHER = "__any__";
+const UPGRADE_PREFIX = "upgrade:";
+
+type PickerEntry =
+  | { kind: "single"; key: string; label: string; recipe: Recipe }
+  | { kind: "upgrade"; key: string; label: string; baseName: string; transitions: { label: string; recipe: Recipe }[] };
+
+function buildPickerEntries(recipes: Recipe[]): PickerEntry[] {
+  const upgradeGroups = new Map<string, { label: string; recipe: Recipe }[]>();
+  const singles: PickerEntry[] = [];
+
+  for (const r of recipes) {
+    if (r.name.includes(" → ")) {
+      // Weapon upgrade — name pattern "Ferro I → II"
+      const [from, to] = r.name.split(" → ");
+      const fromParts = from.split(" ");
+      const fromTier = fromParts[fromParts.length - 1];
+      const baseName = fromParts.slice(0, -1).join(" ");
+      const transitionLabel = `${fromTier} → ${to}`;
+      const existing = upgradeGroups.get(baseName) ?? [];
+      existing.push({ label: transitionLabel, recipe: r });
+      upgradeGroups.set(baseName, existing);
+    } else {
+      singles.push({ kind: "single", key: r.name, label: r.name, recipe: r });
+    }
+  }
+
+  const upgrades: PickerEntry[] = Array.from(upgradeGroups.entries()).map(([baseName, transitions]) => ({
+    kind: "upgrade",
+    key: `${UPGRADE_PREFIX}${baseName}`,
+    label: `${baseName} Upgrade`,
+    baseName,
+    transitions,
+  }));
+
+  return [...singles, ...upgrades].sort((a, b) => a.label.localeCompare(b.label));
+}
 
 export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
-  const [recipeName, setRecipeName] = useState<string>(RECIPES[0].name);
+  const pickerEntries = useMemo(() => buildPickerEntries(RECIPES), []);
+
+  const [selectedKey, setSelectedKey] = useState<string>(pickerEntries[0].key);
+  const [transitionIndex, setTransitionIndex] = useState<number>(0);
   const [qty, setQty] = useState<number>(1);
   const [mapName, setMapName] = useState<string>(ANY_MAP);
   const [weatherName, setWeatherName] = useState<string>(ANY_WEATHER);
 
-  const recipe = useMemo(
-    () => RECIPES.find((r) => r.name === recipeName) ?? RECIPES[0],
-    [recipeName],
+  const selectedEntry = useMemo(
+    () => pickerEntries.find((e) => e.key === selectedKey) ?? pickerEntries[0],
+    [selectedKey, pickerEntries],
   );
+
+  const recipe = useMemo(() => {
+    if (selectedEntry.kind === "single") return selectedEntry.recipe;
+    const idx = Math.min(transitionIndex, selectedEntry.transitions.length - 1);
+    return selectedEntry.transitions[idx].recipe;
+  }, [selectedEntry, transitionIndex]);
+
+  function onSelectKey(key: string) {
+    setSelectedKey(key);
+    setTransitionIndex(0); // reset to first transition when switching recipes
+  }
 
   const available = useMemo(
     () => materialsFromStash(stash, ITEM_BY_NAME),
@@ -69,16 +119,16 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
   return (
     <>
       <SectionLabel>Goal</SectionLabel>
-      <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: 8, marginBottom: 8, flexWrap: "wrap", alignItems: "center" }}>
         <span style={{ fontSize: 12, color: COLORS.textDim }}>Build</span>
         <select
-          value={recipeName}
-          onChange={(e) => setRecipeName(e.target.value)}
+          value={selectedKey}
+          onChange={(e) => onSelectKey(e.target.value)}
           style={{ ...selectStyle, flex: "1 1 150px" }}
         >
-          {RECIPES.map((r) => (
-            <option key={r.name} value={r.name}>
-              {r.name}
+          {pickerEntries.map((e) => (
+            <option key={e.key} value={e.key}>
+              {e.label}
             </option>
           ))}
         </select>
@@ -91,6 +141,21 @@ export default function RunPlanner({ stash }: { stash: StashEntry[] }) {
           style={{ ...inputStyle, width: 64 }}
         />
       </div>
+      {selectedEntry.kind === "upgrade" && (
+        <div style={{ display: "flex", gap: 8, marginBottom: 16, flexWrap: "wrap", alignItems: "center" }}>
+          <span style={{ fontSize: 12, color: COLORS.textDim }}>From tier</span>
+          <select
+            value={transitionIndex}
+            onChange={(e) => setTransitionIndex(+e.target.value)}
+            style={{ ...selectStyle, flex: "1 1 150px" }}
+          >
+            {selectedEntry.transitions.map((t, i) => (
+              <option key={t.label} value={i}>{t.label}</option>
+            ))}
+          </select>
+        </div>
+      )}
+      {selectedEntry.kind === "single" && <div style={{ marginBottom: 8 }} />}
 
       <SectionLabel>Planning for (optional)</SectionLabel>
       <div style={{ display: "flex", gap: 8, marginBottom: 18, flexWrap: "wrap" }}>
