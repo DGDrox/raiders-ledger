@@ -4,32 +4,12 @@ import { recommend } from "./engine/recommend";
 import { ALL_ITEMS, ITEM_BY_NAME } from "./data/items";
 import { loadState, saveState, type StashEntry } from "./storage";
 import RunPlanner from "./components/RunPlanner";
-
-const COLORS = {
-  bg: "#14110d",
-  panel: "#1d1813",
-  panel2: "#26201a",
-  line: "#3a3027",
-  amber: "#e8a13a",
-  amberDim: "#a87528",
-  rust: "#c0563a",
-  green: "#7fa650",
-  text: "#e7ddcf",
-  textDim: "#998d7c",
-};
+import { COLORS, RARITY_COLOR, FONT_IMPORT, HEADER_FONT, BODY_FONT } from "./ui/theme";
 
 const ACTION_COLOR: Record<Action, string> = {
   SELL: COLORS.amber,
   RECYCLE: COLORS.green,
   KEEP: COLORS.rust,
-};
-
-const RARITY_COLOR: Record<Rarity, string> = {
-  Common: COLORS.textDim,
-  Uncommon: COLORS.green,
-  Rare: "#5b8db8",
-  Epic: "#a06fc4",
-  Legendary: COLORS.amber,
 };
 
 const MATERIAL_CATEGORIES: ItemCategory[] = [
@@ -54,8 +34,6 @@ const HOARDABLE_CATEGORIES: ItemCategory[] = [
 type TabId = "stash" | "goals" | "planner";
 
 const PICKER_MAX_RESULTS = 50;
-
-const FONT_IMPORT = `@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');`;
 
 export default function App() {
   const [stash, setStash] = useState<StashEntry[]>([]);
@@ -127,7 +105,7 @@ export default function App() {
         background: COLORS.bg,
         color: COLORS.text,
         minHeight: "100vh",
-        fontFamily: "'IBM Plex Mono', monospace",
+        fontFamily: BODY_FONT,
       }}
     >
       <style>{FONT_IMPORT}</style>
@@ -141,7 +119,7 @@ export default function App() {
       >
         <div
           style={{
-            fontFamily: "Oswald, sans-serif",
+            fontFamily: HEADER_FONT,
             fontWeight: 700,
             fontSize: 26,
             letterSpacing: "0.04em",
@@ -207,7 +185,7 @@ function TabButton({
     <button
       onClick={() => setTab(id)}
       style={{
-        fontFamily: "Oswald, sans-serif",
+        fontFamily: HEADER_FONT,
         textTransform: "uppercase",
         letterSpacing: "0.12em",
         fontSize: 13,
@@ -353,7 +331,7 @@ function StashTab({
           <div style={{ textAlign: "right" }}>
             <div
               style={{
-                fontFamily: "Oswald, sans-serif",
+                fontFamily: HEADER_FONT,
                 fontWeight: 700,
                 letterSpacing: "0.1em",
                 fontSize: 14,
@@ -522,7 +500,7 @@ function Stat({ label, value, color }: { label: string; value: string; color: st
       }}
     >
       <div style={{ fontSize: 10, color: "#998d7c", textTransform: "uppercase", letterSpacing: "0.08em" }}>{label}</div>
-      <div style={{ fontFamily: "Oswald, sans-serif", fontWeight: 700, fontSize: 20, color, marginTop: 3 }}>{value}</div>
+      <div style={{ fontFamily: HEADER_FONT, fontWeight: 700, fontSize: 20, color, marginTop: 3 }}>{value}</div>
     </div>
   );
 }
@@ -531,7 +509,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
-        fontFamily: "Oswald, sans-serif",
+        fontFamily: HEADER_FONT,
         textTransform: "uppercase",
         letterSpacing: "0.12em",
         fontSize: 12,

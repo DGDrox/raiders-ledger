@@ -12,30 +12,10 @@ import { ITEM_BY_NAME } from "../data/items";
 import { RECIPES } from "../data/recipes";
 import { MAPS } from "../data/maps";
 import type { StashEntry } from "../storage";
+import { COLORS, RARITY_COLOR, HEADER_FONT } from "../ui/theme";
 
 // Practice Range is a training map — no loot, no relevance for planning.
 const SELECTABLE_MAPS = MAPS.filter((m) => m.name !== "Practice Range");
-
-const COLORS = {
-  bg: "#14110d",
-  panel: "#1d1813",
-  panel2: "#26201a",
-  line: "#3a3027",
-  amber: "#e8a13a",
-  amberDim: "#a87528",
-  rust: "#c0563a",
-  green: "#7fa650",
-  text: "#e7ddcf",
-  textDim: "#998d7c",
-};
-
-const RARITY_COLOR: Record<Rarity, string> = {
-  Common: COLORS.textDim,
-  Uncommon: COLORS.green,
-  Rare: "#5b8db8",
-  Epic: "#a06fc4",
-  Legendary: COLORS.amber,
-};
 
 const UPGRADE_PREFIX = "upgrade:";
 
@@ -252,7 +232,7 @@ function PlanRow({ line }: { line: PlanLine }) {
         style={{
           width: 60,
           textAlign: "right",
-          fontFamily: "Oswald, sans-serif",
+          fontFamily: HEADER_FONT,
           fontWeight: 700,
           fontSize: 13,
           color: covered ? COLORS.green : COLORS.rust,
@@ -342,7 +322,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <div
       style={{
-        fontFamily: "Oswald, sans-serif",
+        fontFamily: HEADER_FONT,
         textTransform: "uppercase",
         letterSpacing: "0.12em",
         fontSize: 12,
