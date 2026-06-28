@@ -5,6 +5,7 @@ import {
   requirementsForRecipe,
   shortfall,
   mapsByMaterial,
+  mapsByCategory,
   type PlanLine,
 } from "../engine/plan";
 import { ITEM_BY_NAME } from "../data/items";
@@ -290,7 +291,12 @@ function FarmRecommendation({
   short: number;
   mapFilter: string | null;
 }) {
-  const candidates = mapsByMaterial(material, MAPS);
+  const primary = mapsByMaterial(material, MAPS);
+  const item = ITEM_BY_NAME[material];
+  const secondary = item
+    ? mapsByCategory(item.category, MAPS).filter((m) => !primary.includes(m))
+    : [];
+  const candidates = [...primary, ...secondary];
   const maps = mapFilter ? candidates.filter((m) => m.name === mapFilter) : candidates;
 
   return (
@@ -310,14 +316,23 @@ function FarmRecommendation({
       {maps.length === 0 && (
         <div style={{ fontSize: 12, color: COLORS.textDim, lineHeight: 1.5 }}>
           {mapFilter
-            ? `Not documented as a top drop on ${mapFilter}. Try another map.`
-            : "No map currently lists this in its top drops."}
+            ? `Not a documented drop on ${mapFilter}. Try another map.`
+            : "No map data available for this material yet."}
         </div>
       )}
-      {maps.map((m) => (
+      {maps.map((m) => {
+        const isTop = primary.includes(m);
+        return (
         <div key={m.name} style={{ marginTop: 8, paddingTop: 8, borderTop: `1px solid ${COLORS.line}` }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <div style={{ flex: 1, fontSize: 13, color: COLORS.text, fontWeight: 500 }}>{m.name}</div>
+            <div style={{ flex: 1, fontSize: 13, color: COLORS.text, fontWeight: 500 }}>
+              {m.name}
+              {isTop && (
+                <span style={{ marginLeft: 6, fontSize: 9, color: COLORS.amber, fontWeight: 600, letterSpacing: "0.08em" }}>
+                  TOP DROP
+                </span>
+              )}
+            </div>
             <div style={{ fontSize: 10, color: COLORS.textDim, textTransform: "uppercase", letterSpacing: "0.08em" }}>
               {m.riskLevel} · {m.recommendedSize}
             </div>
@@ -329,7 +344,8 @@ function FarmRecommendation({
             </div>
           )}
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

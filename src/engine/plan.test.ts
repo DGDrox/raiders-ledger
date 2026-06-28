@@ -4,8 +4,9 @@ import {
   requirementsForRecipe,
   shortfall,
   mapsByMaterial,
+  mapsByCategory,
 } from "./plan";
-import type { Item, Recipe } from "./types";
+import type { Item, ItemCategory, Recipe } from "./types";
 import type { ArcMap } from "../data/maps";
 
 const mat = (name: string, sellPrice: number): Item => ({
@@ -151,12 +152,12 @@ describe("shortfall", () => {
   });
 });
 
-const makeMap = (name: string, topMaterials: string[]): ArcMap => ({
+const makeMap = (name: string, topMaterials: string[], lootBias: ItemCategory[] = []): ArcMap => ({
   name,
   riskLevel: "Medium",
   recommendedSize: "Duo",
   description: "test",
-  lootBias: [],
+  lootBias,
   topMaterials,
   pois: [],
 });
@@ -180,5 +181,26 @@ describe("mapsByMaterial", () => {
   it("is exact-match (no substring matching)", () => {
     const maps = [makeMap("Buried City", ["Metal Parts"])];
     expect(mapsByMaterial("Metal", maps)).toEqual([]);
+  });
+});
+
+describe("mapsByCategory", () => {
+  it("returns maps whose lootBias contains the category", () => {
+    const maps = [
+      makeMap("A", [], ["Basic Material", "Topside Material"]),
+      makeMap("B", [], ["Refined Material"]),
+      makeMap("C", [], ["Topside Material", "Refined Material"]),
+    ];
+    expect(mapsByCategory("Topside Material", maps).map((m) => m.name)).toEqual(["A", "C"]);
+  });
+
+  it("returns empty when no map has the category", () => {
+    const maps = [makeMap("A", [], ["Basic Material"])];
+    expect(mapsByCategory("Refined Material", maps)).toEqual([]);
+  });
+
+  it("returns empty when lootBias is empty", () => {
+    const maps = [makeMap("A", [])];
+    expect(mapsByCategory("Basic Material", maps)).toEqual([]);
   });
 });

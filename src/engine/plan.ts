@@ -1,4 +1,4 @@
-import type { Item, Recipe } from "./types";
+import type { Item, ItemCategory, Recipe } from "./types";
 import type { StashEntry } from "../storage";
 import type { ArcMap } from "../data/maps";
 
@@ -52,4 +52,8 @@ export function shortfall(
 
 export function mapsByMaterial(material: string, maps: ArcMap[]): ArcMap[] {
   return maps.filter((m) => m.topMaterials.includes(material));
+}
+
+export function mapsByCategory(category: ItemCategory, maps: ArcMap[]): ArcMap[] {
+  return maps.filter((m) => m.lootBias.includes(category));
 }
